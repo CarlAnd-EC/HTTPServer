@@ -23,6 +23,7 @@ Endpoint         Method     Description
 
 */
 const http = require('http');
+var path = require('path');
 const fs = require('fs');
 const os = require('os');
 const inspector = require('./inspectDir');
@@ -49,6 +50,7 @@ const server = http.createServer(
     const {url,method} = request;
     // const route = myRouter(request.url);
     const res = evaluateRequest(url,method);
+    // var file = path.join(dir, reqpath.replace(/\/$/, '/index.html'));
     response.writeHead(res.statusCode,{'Content-type':'text/html'});
     const readSream = fs.createReadStream(res.view,'utf8');
     readSream.pipe(response);
@@ -57,7 +59,7 @@ const server = http.createServer(
   });
 
 function welcome (){
-  return "myWebPage.html";
+  return "./views/myWebPage.html";
 }
 function explore(path){
   let html = fs.readFileSync("./views/fileViewer.html",'utf-8');
@@ -85,13 +87,13 @@ function evaluateRequest(url,method){
     else{
       // 405 Method Not Allowed
       response.statusCode = 405;
-      response.view ="./views/405.html";
+      response.view = "./views/405.html";
     }
   }
   else{
     // 404 Not Found
     response.statusCode = 404;
-    response.view ="./views/404.html";
+    response.view = "./views/404.html";
   }
   return response;
 }
