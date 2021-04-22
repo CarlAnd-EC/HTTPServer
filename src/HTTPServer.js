@@ -29,77 +29,102 @@ const os = require('os');
 const inspector = require('./inspectDir');
 
 const PORT = 8080;
-const dir = path.join(__dirname, 'public');
+const dir = path.join(__dirname.replace('src',''),'public');
+const FAVICON = path.join(dir, '/images/favicon.ico');
 
 const serverRoutes = {
-  home:{
+  '/':{
     method:{GET: welcome}
   },
-  books:{
+  '/books':{
     method:{
       GET: ()=> "books-GET",
       POST: ()=> "books-POST",
       DELETE: ()=> "books-DELETE"
     }
   },
-  file_viewer:{method:{GET: explore}},
-  server_status:{method:{GET: ()=> "server status-GET"}}
+  '/file-viewer':{method:{GET: explore}},
+  '/server-status':{method:{GET: ()=> "server status-GET"}}
 }; 
+
+const mime = {
+  html: 'text/html',
+  txt: 'text/plain',
+  css: 'text/css',
+  gif: 'image/gif',
+  jpg: 'image/jpeg',
+  png: 'image/png',
+  svg: 'image/svg+xml',
+  js: 'application/javascript'
+};
 
 const server = http.createServer(
   (request,response)=>{
     const {url,method} = request;
-    // const route = myRouter(request.url);
-    const res = evaluateRequest(url,method);
-    const file = path.join(dir, res.view);
-    response.writeHead(res.statusCode,{'Content-type':'text/html'});
-    const readStream = fs.createReadStream(file,'utf8');
-    readStream.on('open', function () {
-      readStream.pipe(response);
-    });
-    readStream.on('error', function () {
-        response.writeHead(404,{'Content-type':'text/plain'});
-        response.end('Not found');
-    });
+    // Serve html, js, css and img
+    if ( serverRoutes.hasOwnProperty(url) ){
+      const res = evaluateRequest(url,method);
+      const type = mime[path.extname(res.view).slice(1)] || 'text/plain';
+      console.log(`${res.view} ${res.statusCode} ${method} ${type}`);
+      fs.readFile(res.view, "UTF-8", function(err, html){
+        response.writeHead(res.statusCode, {"Content-Type": type});
+        response.end(html);
+      });
+    }
+    else{
+      // 404 Not Found
+      response.writeHead(404, {"Content-Type": 'text/html'});
+      response.end(fs.readFileSync(path.join(dir, "./views/404.html")));
+    }
+    if(url.match("/NewFavicon") ){
+        console.log('Request for favicon.ico');
+        const img = fs.readFileSync(FAVICON);
+        response.writeHead(200, {'Content-Type': 'image/x-icon' });
+        response.end(img, 'binary');
+    }
+    
+    
+    // const readStream = fs.createReadStream(res.view,{encoding: 'utf-8'});
+    // readStream.on('open', function () {
+    //   response.writeHead(res.statusCode,{'Content-type':type});
+    //   readStream.pipe(response);
+    // });
+    // readStream.on('error', function () {
+    //     console.log("Read Stream: Error 404");
+    //     response.writeHead(404,{'Content-type':'text/plain'});
+    //     response.end('Not found');
+    // });
   });
 
 function welcome (){
   return "./views/myWebPage.html";
 }
-function explore(path){
-  let html = fs.readFileSync("./views/fileViewer.html",'utf-8');
+function explore(file){
+  let html = fs.readFileSync(path.join(dir,"./views/fileViewer.html"),{encoding:'utf-8'});
   splittedHTML = html.split('split');
   // console.log(splittedHTML);
-  html = `${splittedHTML[0]}Result: ${inspector.inspectDir(path)} ${splittedHTML[1]}`; 
+  html = `${splittedHTML[0]}Result: ${inspector.inspectDir(file)} ${splittedHTML[1]}`; 
   // const content = `Result: ${inspector.inspectDir(path)}`;
-  fs.writeFileSync("./views/fileViewer.html", html, { encoding: 'utf-8'});
+  fs.writeFileSync(path.join(dir,"./views/fileViewer.html"), html, { encoding: 'utf-8'});
   return "./views/fileViewer.html";
 }
 
-function evaluateRequest(url,method){
-  let route;
+function evaluateRequest(route,method){
   let response = {};
-
-  if(url==='/') route = "home";
-  else if(url.includes('-')) route = url.slice(1).replace(/\-/g,'_');
-  else route = url.slice(1);
-
   if(serverRoutes.hasOwnProperty(route)){
     if(serverRoutes[`${route}`].method.hasOwnProperty(method)){
       response.statusCode = 200;
-      response.view = serverRoutes[`${route}`].method[`${method}`]();
+      response.view = path.join(dir, serverRoutes[`${route}`].method[`${method}`]());
     }
     else{
       // 405 Method Not Allowed
       response.statusCode = 405;
-      response.view = "./views/405.html";
+      response.view = path.join(dir, "./views/405.html");
     }
   }
-  else{
-    // 404 Not Found
-    response.statusCode = 404;
-    response.view = "./views/404.html";
-  }
+  // else if(mime.hasOwnProperty(path.extname(route))){
+  //   response.view = path.join(dir, route);
+  // }
   return response;
 }
 server.listen(PORT, ()=>console.log(`Server running at port: ${PORT}`));
