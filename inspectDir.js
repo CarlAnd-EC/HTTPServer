@@ -54,7 +54,7 @@ catch (error) {
 console.timeEnd('Inspection Time');
 }
 function inspect(path){
-  var files = fs.readdirSync(path);
+  var files = fs.readdirSync(path,'utf-8');
   if(files.length>0){
     let result = files.map((file) => {
       if(file.lastIndexOf('.')<0) file+='/';

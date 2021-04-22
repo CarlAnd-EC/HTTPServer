@@ -50,7 +50,7 @@ const server = http.createServer(
     // const route = myRouter(request.url);
     const res = evaluateRequest(url,method);
     response.writeHead(res.statusCode,{'Content-type':'text/html'});
-    const readSream = fs.createReadStream(res.view,'utf8')
+    const readSream = fs.createReadStream(res.view,'utf8');
     readSream.pipe(response);
     // response.end(res.view);
     // return route(request,response)
@@ -60,8 +60,12 @@ function welcome (){
   return "myWebPage.html";
 }
 function explore(path){
-  const content = `Result: ${inspector.inspectDir(path)}`;
-  fs.writeFileSync("./views/fileViewer.html", content, { encoding: 'utf-8'});
+  let html = fs.readFileSync("./views/fileViewer.html",'utf-8');
+  splittedHTML = html.split('split');
+  // console.log(splittedHTML);
+  html = `${splittedHTML[0]}Result: ${inspector.inspectDir(path)} ${splittedHTML[1]}`; 
+  // const content = `Result: ${inspector.inspectDir(path)}`;
+  fs.writeFileSync("./views/fileViewer.html", html, { encoding: 'utf-8'});
   return "./views/fileViewer.html";
 }
 
