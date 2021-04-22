@@ -1,52 +1,24 @@
 <!DOCTYPE html>
 <html>
-  <title>My Web Page by Carlos Escalona</title>
+  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <!-- add icon link -->
-  <link rel = "icon" href="./images/KG_logo.png" type="image/x-icon">
+  <link rel = "shortcut icon" type="image/x-icon" href="/NewFavicon">
+  <title>My Web Page by Carlos Escalona</title>
 <style>
 body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
-.w3-row-padding img {margin-bottom: 12px}
-/* Set the width of the sidebar to 120px */
-.w3-sidebar {width: 120px;background: #222;}
 /* Add a left margin to the "page content" that matches the width of the sidebar (120px) */
-header,main,footer {margin-left: 120px}
-/* Remove margins from "page content" on small screens */
-@media only screen and (max-width: 600px) {header,main,footer {margin-left: 0}}
+/* @media only screen and (max-width: 600px) {header,main,footer {margin-left: 0}} */
 </style>
 <body class="w3-black">
-  <!-- Icon Bar (Sidebar - hidden on small screens) -->
-  <nav class="w3-sidebar w3-bar-block w3-small w3-hide-small w3-center">
-    <!-- Avatar image in top left corner -->
-    <img src="./images/circuits.gif" alt="icono" style="width:100%">
-    <a href="#" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
-      <i class="fa fa-home w3-xxlarge"></i>
-      <p>HOME</p>
-    </a>
-    <a href="#about" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
-      <i class="fa fa-user w3-xxlarge"></i>
-      <p>ABOUT</p>
-    </a>
-    <a href="#photos" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
-      <i class="fa fa-eye w3-xxlarge"></i>
-      <p>SKILLS</p>
-    </a>
-    <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
-      <i class="fa fa-envelope w3-xxlarge"></i>
-      <p>CONTACT</p>
-    </a>
-  </nav>
-
   <!-- Page Content -->
   <!-- Header/Home -->
   <header class="w3-container w3-padding-32 w3-center w3-black" id="home">
-    <h1 class="w3-jumbo"><span class="w3-hide-small">Hi! I'm</span> Carlos Escalona</h1>
-    <p>Digital Systems and Robotics Engineer</p>
-    <!--<img src="foto.png" alt="your photo" class="w3-image" width="139" height="180">-->
+    <h1 class="w3-jumbo"><span class="w3-hide-small">Hi!</span> Welcome!</h1>
   </header>
   <main>
     <!-- About Section -->
@@ -54,48 +26,37 @@ header,main,footer {margin-left: 120px}
       <h2 class="w3-text-light-grey">Here you can find interesting tools:</h2>
       <hr style="width:200px" class="w3-opacity">
       <p>
-        /books           GET        Return a list from a .txt file
-        /books           POST       Append a new element to the .txt file
-        /books           DELETE     To clear the content of .txt file
-        /file-viewer     GET        Displays a file content from an internal directory. 
-                                    Name of file should be passed via query parameter.
-        /server-status   GET        Displays a JSON showing hostname, cpus available, architecture, uptime, userinfo, memory available
+        <ul>
+          <li>Library</li>
+          <li>File Viewer</li>
+          <li>Server Status</li>
+        </ul>
       </p>
     </div>
-    
-    
 
     <!-- Contact Section -->
     <div class="w3-padding-64 w3-content w3-text-grey" id="contact">
-      <h2 class="w3-text-light-grey">Contact Me</h2>
+      <h2 class="w3-text-light-grey">Library</h2>
       <hr style="width:200px" class="w3-opacity">
-
-      <div class="w3-section">
-        <p><i class="fa fa-map-marker fa-fw w3-text-white w3-xxlarge w3-margin-right"></i> CDMX, Mexico</p>
-        <p><i class="fa fa-phone fa-fw w3-text-white w3-xxlarge w3-margin-right"></i> Phone: +52 5513676172</p>
-        <p><i class="fa fa-envelope fa-fw w3-text-white w3-xxlarge w3-margin-right"> </i> Email: carl.esc.cont@gmail.com</p>
-      </div><br>
-      <p>Lets get in touch. Send me a message:</p>
-
-      <form action="/" target="_blank">
-        <p><input class="w3-input w3-padding-16" type="text" placeholder="Name" required name="Name"></p>
-        <p><input class="w3-input w3-padding-16" type="text" placeholder="Email" required name="Email"></p>
+      <p>Add a book to our library:</p>
+      <form action="/books" method="POST">
+        <p><input class="w3-input w3-padding-16" type="text" placeholder="Title" required name="Title"></p>
+        <p><input class="w3-input w3-padding-16" type="text" placeholder="Author" required name="Author"></p>
         <p><input class="w3-input w3-padding-16" type="text" placeholder="Subject" required name="Subject"></p>
         <p><input class="w3-input w3-padding-16" type="text" placeholder="Message" required name="Message"></p>
         <p>
           <button class="w3-button w3-light-grey w3-padding-large" type="submit">
-            <i class="fa fa-paper-plane"></i> SEND MESSAGE
+            <i class="fa fa-paper-plane"></i> POST
           </button>
         </p>
       </form>
-    <!-- End Contact Section -->
     </div>
   </main>
-      <!-- Footer -->
-    <footer class="w3-content w3-padding-64 w3-text-grey w3-xlarge">
-      <p class="w3-medium">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank" class="w3-hover-text-green">w3.css</a></p>
-    <!-- End footer -->
-    </footer>
+    <!-- Footer -->
+  <footer class="w3-content w3-padding-64 w3-text-grey w3-xlarge">
+    <p class="w3-medium">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank" class="w3-hover-text-green">w3.css</a></p>
+  <!-- End footer -->
+  </footer>
   <!-- END PAGE CONTENT -->
 </body>
 </html>
