@@ -29,6 +29,7 @@ const os = require('os');
 const inspector = require('./inspectDir');
 
 const PORT = 8080;
+const dir = path.join(__dirname, 'public');
 
 const serverRoutes = {
   home:{
@@ -50,12 +51,16 @@ const server = http.createServer(
     const {url,method} = request;
     // const route = myRouter(request.url);
     const res = evaluateRequest(url,method);
-    // var file = path.join(dir, reqpath.replace(/\/$/, '/index.html'));
+    const file = path.join(dir, res.view);
     response.writeHead(res.statusCode,{'Content-type':'text/html'});
-    const readSream = fs.createReadStream(res.view,'utf8');
-    readSream.pipe(response);
-    // response.end(res.view);
-    // return route(request,response)
+    const readStream = fs.createReadStream(file,'utf8');
+    readStream.on('open', function () {
+      readStream.pipe(response);
+    });
+    readStream.on('error', function () {
+        response.writeHead(404,{'Content-type':'text/plain'});
+        response.end('Not found');
+    });
   });
 
 function welcome (){
