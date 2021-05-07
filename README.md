@@ -20,9 +20,10 @@ Updated: 20/04/2021
 | /server-status | GET    | Displays a JSON showing hostname, cpus available, architecture, uptime, userinfo, and memory available. |
 
 
-Json Example: 
+Json Example:   
 ```json
 {
-  “title”: “Welcome to my blog”,
-  “description”: “This is my personal Web Page”}
+  "title": "Welcome to my blog",
+  "description": "This is my personal Web Page"
+}
 ```
