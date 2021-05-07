@@ -29,16 +29,16 @@ const os = require('os');
 const inspector = require('./inspectDir');
 
 const PORT = 8080;
-const dir = path.join(__dirname.replace('src',''),'public');
-const FAVICON = path.join(dir, '/images/favicon.ico');
+const publicDir = path.join(__dirname.replace('src',''),'public');
+const FAVICON = path.join(publicDir, '/images/favicon.ico');
 
 const serverRoutes = {
   '/':{
-    method:{GET: welcome}
+    method:{GET: ()=> "./views/myWebPage.html"}
   },
   '/books':{
     method:{
-      GET: ()=> "books-GET",
+      GET: getLibrary,
       POST: ()=> "books-POST",
       DELETE: ()=> "books-DELETE"
     }
@@ -58,9 +58,24 @@ const mime = {
   js: 'application/javascript'
 };
 
+const statusCodes= {
+  informational: {}, //(100–199)
+  successful: {},   //(200–299)
+  redirects: {},    //(300–399)
+  clientError: {},  //(400–499)
+  serverError: {},  //(500–599)
+}
 const server = http.createServer(
   (request,response)=>{
+    console.log(request);
     const {url,method} = request;
+
+    if(url.match("/NewFavicon") ){
+      console.log('Request for favicon.ico');
+      const img = fs.readFileSync(FAVICON);
+      response.writeHead(200, {'Content-Type': 'image/x-icon' });
+      response.end(img, 'binary');
+    }
     // Serve html, js, css and img
     if ( serverRoutes.hasOwnProperty(url) ){
       const res = evaluateRequest(url,method);
@@ -74,15 +89,8 @@ const server = http.createServer(
     else{
       // 404 Not Found
       response.writeHead(404, {"Content-Type": 'text/html'});
-      response.end(fs.readFileSync(path.join(dir, "./views/404.html")));
+      response.end(fs.readFileSync(path.join(publicDir, "./views/404.html")));
     }
-    if(url.match("/NewFavicon") ){
-        console.log('Request for favicon.ico');
-        const img = fs.readFileSync(FAVICON);
-        response.writeHead(200, {'Content-Type': 'image/x-icon' });
-        response.end(img, 'binary');
-    }
-    
     
     // const readStream = fs.createReadStream(res.view,{encoding: 'utf-8'});
     // readStream.on('open', function () {
@@ -94,32 +102,18 @@ const server = http.createServer(
     //     response.writeHead(404,{'Content-type':'text/plain'});
     //     response.end('Not found');
     // });
-  });
-
-function welcome (){
-  return "./views/myWebPage.html";
-}
-function explore(file){
-  let html = fs.readFileSync(path.join(dir,"./views/fileViewer.html"),{encoding:'utf-8'});
-  splittedHTML = html.split('split');
-  // console.log(splittedHTML);
-  html = `${splittedHTML[0]}Result: ${inspector.inspectDir(file)} ${splittedHTML[1]}`; 
-  // const content = `Result: ${inspector.inspectDir(path)}`;
-  fs.writeFileSync(path.join(dir,"./views/fileViewer.html"), html, { encoding: 'utf-8'});
-  return "./views/fileViewer.html";
-}
-
+  }).listen(PORT, ()=>console.log(`Server running at port: ${PORT}`));
 function evaluateRequest(route,method){
   let response = {};
   if(serverRoutes.hasOwnProperty(route)){
     if(serverRoutes[`${route}`].method.hasOwnProperty(method)){
       response.statusCode = 200;
-      response.view = path.join(dir, serverRoutes[`${route}`].method[`${method}`]());
+      response.view = path.join(publicDir, serverRoutes[`${route}`].method[`${method}`]());
     }
     else{
       // 405 Method Not Allowed
       response.statusCode = 405;
-      response.view = path.join(dir, "./views/405.html");
+      response.view = path.join(publicDir, "./views/405.html");
     }
   }
   // else if(mime.hasOwnProperty(path.extname(route))){
@@ -127,4 +121,17 @@ function evaluateRequest(route,method){
   // }
   return response;
 }
-server.listen(PORT, ()=>console.log(`Server running at port: ${PORT}`));
+
+function explore(file){
+  let html = fs.readFileSync(path.join(publicDir,"./views/fileViewer.html"),{encoding:'utf-8'});
+  splittedHTML = html.split('Result');
+  // console.log(splittedHTML);
+  html = `${splittedHTML[0]}Result: ${inspector.inspectDir(file)} ${splittedHTML[1]}`; 
+  // const content = `Result: ${inspector.inspectDir(path)}`;
+  fs.writeFileSync(path.join(publicDir,"./views/fileViewer.html"), html, { encoding: 'utf-8'});
+  return "./views/fileViewer.html";
+}
+
+function getLibrary(){
+  let library = fs.readFileSync(path.join(publicDir,"./docs/library.txt"),{encoding:'utf-8'});
+}

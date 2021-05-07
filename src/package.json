@@ -1,0 +1,28 @@
+{
+  "name": "httpserver",
+  "version": "1.0.1",
+  "description": "Basic HTTP web server that serves 4 routes (/,/books,/file-viewer,/server-status)",
+  "main": "HTTPServer.js",
+  "dependencies": {
+    "nodemon": "^2.0.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node HTTPServer.js",
+    "build": "",
+    "test": "npx nodemon HTTPServer.js"
+  },
+  "author": "Carlos Andrés Escalona Contreras",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CarlosAEC-KS/Demo.git"
+  },
+  "keywords": [
+    "HTTP"
+  ],
+  "bugs": {
+    "url": "https://github.com/CarlosAEC-KS/Demo/issues"
+  },
+  "homepage": "https://github.com/CarlosAEC-KS/Demo#readme"
+}
