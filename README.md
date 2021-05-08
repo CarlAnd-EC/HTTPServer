@@ -6,7 +6,7 @@ Created: 20/04/2021
 Updated: 20/04/2021
 
 ## Installation
-### `git clone https://github.com/CarlosAEC-KS/Demo`
+### `git clone https://github.com/CarlosAEC-KS/HTTPServer`
 ## Testing
 ### `npm run test`
 ## Start
